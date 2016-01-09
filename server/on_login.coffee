@@ -7,9 +7,12 @@ Accounts.onLogin (user) ->
       screen: "main"
     console.log 'inserted in screens user - ' + id
 
-  Meteor.publish "Screens", ->
-    Screens.find
-      user: id
-      , {}
-    console.log "Collections PUBLISHED (after)" + id
+#  console.log "Collections PUBLISHED (before) - " + id
+#  Meteor.publish "Screens", ->
+#    screens = Screens.find(user: id)
+#    console.log screens
+#    return screens if screens
+#    @ready()
 
+  if Meteor.isClient
+    Meteor.subscribe("Screens")
