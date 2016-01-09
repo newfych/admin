@@ -1,0 +1,22 @@
+<template name="ScreensTab">
+	<div class="page-container container" id="content">
+		<div class="row" id="title_row">
+			<div class="col-md-12">
+				<div id="page_menu" class="pull-right">
+				</div>
+			</div>
+		</div>
+		<div class="row" id="screens_row">
+			{{#each screens}}
+				{{>screen}}
+			{{/each}}
+			<div class="col-sm-6">
+				<button id="add-screen">ADDDD</button>
+			</div>
+			<div class="col-sm-6">
+				<button id="remove-screen">REMMM</button>
+			</div>
+		</div>
+	</div>
+</template>
+
