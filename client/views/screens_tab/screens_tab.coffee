@@ -22,10 +22,3 @@ Template.ScreensTab.events
       id = Screens.findOne(user: Meteor.userId())._id
       Screens.remove(id)
       console.log 'Removed ' + id
-
-#Template.ScreensTab.rendered = ->
-#  screens = ->
-#    Screens.find
-#      user: Meteor.userId()
-#      , {}
-#  console.log screens

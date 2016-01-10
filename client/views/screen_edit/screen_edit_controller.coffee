@@ -1,10 +1,14 @@
-@ScreenPageController = RouteController.extend(
-  template: "ScreenPage"
-  yieldTemplates: {}
+@ScreenEditController = RouteController.extend(
+  template: "ScreenEdit"
+  yieldTemplates:
+    ScreenGrid:
+      to: "grid"
+    RightPanel:
+      to: "panel"
 
 #YIELD_TEMPLATES
-#	onBeforeAction: ->
-#		@next()
+	onBeforeAction: ->
+		@next()
 
   action: ->
     if @isReady()
@@ -28,7 +32,4 @@
 
 #DATA_FUNCTION
   onAfterAction: ->
-
-  unload: ->
-    $("#screen-page-navbar-element").remove()
 )

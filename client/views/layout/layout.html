@@ -81,14 +81,15 @@
 	<div id="footer" class="sticky-footer">
 		<div class="footer-container container">
 			<p class="text-muted">
+				Rusin sasa
 			</p>
 		</div>
 	</div>
 </template>
 
 <template name="PublicLayoutLeftMenu">
-	<ul id="menu-items" class="nav navbar-nav">
-		<li id="menu-item-simple" class="{{menuItemClass 'home_public'}}">
+	<ul id="public-left-menu-items" class="nav navbar-nav">
+		<li id="public-left-menu-item-simple" class="{{menuItemClass 'home_public'}}">
 			<a href="{{pathFor 'home_public'}}">
 				<span class="item-title">
 					Home
@@ -99,15 +100,15 @@
 </template>
 
 <template name="PublicLayoutRightMenu">
-	<ul id="menu-items" class="nav navbar-nav navbar-right">
-		<li id="menu-item-simple" class="{{menuItemClass 'register'}}">
+	<ul id="public-right-menu-items" class="nav navbar-nav navbar-right">
+		<li id="register-item-simple" class="{{menuItemClass 'register'}}">
 			<a href="{{pathFor 'register'}}">
 				<span class="item-title">
 					Register
 				</span>
 			</a>
 		</li>
-		<li id="menu-item-simple" class="{{menuItemClass 'login'}}">
+		<li id="login-item-simple" class="{{menuItemClass 'login'}}">
 			<a href="{{pathFor 'login'}}">
 				<span class="item-title">
 					Login
@@ -146,17 +147,11 @@
 		</div>
 		{{> yield}}
 	</div>
-	<div id="footer" class="sticky-footer">
-		<div class="footer-container container">
-			<p class="text-muted">
-			</p>
-		</div>
-	</div>
 </template>
 
 <template name="PrivateLayoutLeftMenu">
-	<ul id="menu-items" class="nav navbar-nav">
-		<li id="menu-item-simple" class="{{menuItemClass 'home_private'}}">
+	<ul id="private-left-menu-items" class="nav navbar-nav">
+		<li id="home-item-simple">
 			<a href="{{pathFor 'home_private'}}">
 				<span class="fa fa-home">
 				</span>
@@ -169,8 +164,8 @@
 </template>
 
 <template name="PrivateLayoutRightMenu">
-	<ul id="menu-items" class="nav navbar-nav navbar-right">
-		<li id="menu-item-simple" class="{{menuItemClass 'admin'}}">
+	<ul id="private-right-menu-items" class="nav navbar-nav navbar-right">
+		<li id="admin-item-simple" class="{{menuItemClass 'admin'}}">
 			<a href="{{pathFor 'admin'}}">
 				<span class="fa fa-wrench">
 				</span>

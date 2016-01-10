@@ -2,17 +2,30 @@ Template.ScreenPage.helpers
   currentId: ->
     Router.current().params.screenId
 
-Template.ScreenPage.events
-  "click #test-button": (e, t) ->
+Template.PrivateLayout.events
+  "click #edit": (e, t) ->
     e.preventDefault()
-    console.log 'test clicked : ' + Router.current().params.screenId
+    console.log 'edit clicked : ' + Router.current().params.screenId
+    Router.go "screen_edit",
+      screenId: Router.current().params.screenId
 
 Template.ScreenPage.rendered = ->
+  resizeElements()
+  updateNavbar()
+
+updateNavbar = ->
+  left_menu = $("#private-left-menu-items")
+  left_menu.append(
+    '<li id="screen-page-navbar-element"><a href="#" id="edit">
+    <span class="item-title">&nbsp;Edit</span>
+    </a></li>')
+
+resizeElements = ->
   wrap_container = $("#wrap-container")
   win_w = $(window).outerWidth(true)
   win_h = $(window).outerHeight(true)
   nav_h = $("#navbar").outerHeight()
-  console.log "win w = " + win_w + ", win h = " + win_h + ", nav h = " + nav_h
+#  console.log "win w = " + win_w + ", win h = " + win_h + ", nav h = " + nav_h
   wrap_container.width(win_w)
   wrap_container.height(win_h - nav_h)
   wrap_container.css

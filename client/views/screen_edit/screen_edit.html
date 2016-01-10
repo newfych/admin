@@ -1,0 +1,19 @@
+<template name="ScreenEdit">
+		<div id="edit-container">
+			<p>Jga</p>
+			{{currentId}}
+			<div id="wrap-grid-container">
+				<div id="grid-container">
+					{{> yield region='grid'}}
+				</div>
+			</div>
+			<div id="wrap-panel-container">
+				<div id="panel-container">
+					{{> yield region='panel'}}
+				</div>
+			</div>
+			<button id="test-button">
+				Test
+			</button>
+		</div>
+</template>
