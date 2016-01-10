@@ -6,7 +6,7 @@ Router.configure
 	loadingTemplate: "loading"
 
 publicRoutes = [ "home_public", "login", "register", "verify_email", "forgot_password", "reset_password" ]
-privateRoutes = [ "home_private", "admin", "admin.users", "admin.users.details", "admin.users.insert", "admin.users.edit", "user_settings", "user_settings.profile", "user_settings.change_pass", "logout", "screens_tab" ]
+privateRoutes = [ "home_private", "admin", "admin.users", "admin.users.details", "admin.users.insert", "admin.users.edit", "user_settings", "user_settings.profile", "user_settings.change_pass", "logout", "screens_tab", "screen_page" ]
 freeRoutes = []
 roleMap = [
 	route: "admin"
@@ -210,5 +210,9 @@ Router.map ->
 	@route "logout",
 		path: "/logout"
 		controller: "LogoutController"
+
+	@route "screen_page",
+		path: "/screen_page/:screenId"
+		controller: "ScreenPageController"
 
 

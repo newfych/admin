@@ -3,6 +3,11 @@ Template.ScreensTab.helpers
     Screens.find()
 
 Template.ScreensTab.events
+  "click #screen-tab": (e, t) ->
+    e.preventDefault()
+    console.log 'screen tab clicked : ' + @_id
+    Router.go "screen_page",
+      screenId: @_id
   "click #add-screen": (e, t) ->
     e.preventDefault()
     Screens.insert

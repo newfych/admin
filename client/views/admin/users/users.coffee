@@ -177,6 +177,7 @@ Template.AdminUsersViewTableItems.events
 					label: "Yes"
 					className: "btn-success"
 					callback: ->
+						console.log 'Delete clicked ' + me._id
 						Users.remove _id: me._id
 
 				danger:
