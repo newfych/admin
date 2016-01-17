@@ -2,8 +2,7 @@ Template.ScreenPage.helpers
   currentId: ->
     currentId()
   currentScreen: ->
-    screen = Screens.findOne({_id: currentId()}, {})
-    return screen and screen.screen
+    currentScreen()
 
 Template.PrivateLayout.events
   "click #edit": (e, t) ->
@@ -37,6 +36,10 @@ Template.ScreenPage.rendered = ->
 
 currentId = ->
   Router.current().params.screenId
+
+currentScreen = ->
+  screen = Screens.findOne({_id: currentId()}, {})
+  return screen and screen.screen
 
 updateNavbar = ->
   left_menu = $("#private-left-menu-items")

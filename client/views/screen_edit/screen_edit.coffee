@@ -1,17 +1,26 @@
 Template.ScreenEdit.helpers
   currentId: ->
-    Router.current().params.screenId
+    currentId()
+  currentScreen: ->
+    currentScreen()
 
 Template.ScreenEdit.events
   "click #add-control": (e, t) ->
     e.preventDefault()
-    console.log 'Add clicked'
+    console.dir currentScreen()
   "click #remove-control": (e, t) ->
     e.preventDefault()
     console.log 'remove clicked clicked'
 
 Template.ScreenEdit.rendered = ->
   resizeElements()
+
+currentId = ->
+  Router.current().params.screenId
+
+currentScreen = ->
+  screen = Screens.findOne()
+  return screen
 
 resizeElements = ->
   grid_width = 0.8
@@ -31,7 +40,6 @@ resizeElements = ->
   wrap_grid_container_w = win_w * grid_width
   wrap_panel_container_w = win_w * (1 - grid_width)
 
-  #  console.log "win w = " + win_w + ", win h = " + win_h + ", nav h = " + nav_h
 #  Edit container
   edit_container.css
     position: "absolute"
@@ -91,7 +99,7 @@ resizeElements = ->
 
 #  Panel container
   panel_container_w = wrap_panel_container_w * panel_inner
-  panel_container_left = (wrap_panel_container_w - panel_container_w)/2
+#  panel_container_left = (wrap_panel_container_w - panel_container_w)/2
   panel_container.css
     position: "absolute"
     width: panel_container_w

@@ -3,8 +3,8 @@
   yieldTemplates: {}
 
 #YIELD_TEMPLATES
-#	onBeforeAction: ->
-#		@next()
+	onBeforeAction: ->
+		@next()
 
   action: ->
     if @isReady()
@@ -31,5 +31,6 @@
 
   unload: ->
     $("li").remove("#screen-page-navbar-element")
+    console.log 'screen page unload'
 
 )
