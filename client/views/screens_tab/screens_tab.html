@@ -1,16 +1,9 @@
 <template name="ScreensTab">
-	<div class="page-container container" id="content">
-		<div class="row" id="screens_row">
+	<div id="screens-tab-container">
 			{{#each screens}}
 				{{>ScreenTab}}
 			{{/each}}
-			<div class="col-sm-6">
-				<button id="add-screen">ADDDD</button>
-			</div>
-			<div class="col-sm-6">
-				<button id="remove-screen">REMMM</button>
-			</div>
-		</div>
+			{{>AddScreen}}
 	</div>
 </template>
 

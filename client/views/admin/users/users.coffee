@@ -174,14 +174,14 @@ Template.AdminUsersViewTableItems.events
 			animate: false
 			buttons:
 				success:
-					label: "Yes"
-					className: "btn-success"
+					label: "Delete"
+					className: "btn-warning"
 					callback: ->
-						console.log 'Delete clicked ' + me._id
+						console.log 'Delete clicked with id: ' + me._id
 						Users.remove _id: me._id
 
 				danger:
-					label: "No"
+					label: "Cancel"
 					className: "btn-default"
 
 		false

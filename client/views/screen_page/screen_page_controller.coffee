@@ -30,5 +30,6 @@
   onAfterAction: ->
 
   unload: ->
-    $("#screen-page-navbar-element").remove()
+    $("li").remove("#screen-page-navbar-element")
+
 )

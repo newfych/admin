@@ -1,23 +1,56 @@
 Template.ScreenPage.helpers
   currentId: ->
-    Router.current().params.screenId
+    currentId()
+  currentScreen: ->
+    screen = Screens.findOne({_id: currentId()}, {})
+    return screen and screen.screen
 
 Template.PrivateLayout.events
   "click #edit": (e, t) ->
     e.preventDefault()
-    console.log 'edit clicked : ' + Router.current().params.screenId
+    console.log 'edit clicked : ' + currentId()
     Router.go "screen_edit",
-      screenId: Router.current().params.screenId
+      screenId: currentId()
+  "click #delete": (e, t) ->
+    e.preventDefault()
+    console.log 'rem clicked '
+    if Screens.findOne( _id: currentId())
+      bootbox.dialog
+        title: "Delete screen"
+        message: "Are you sure to delete this screen?"
+        buttons:
+          confirm:
+            label: "Delete"
+            className: "btn-warning"
+            callback: ->
+              console.log 'One found - '
+              Screens.remove( _id: currentId())
+              console.log 'Removed ' + currentId()
+              Router.go "home_private"
+          danger:
+            label: "Cancel"
+            className: "btn-default"
 
 Template.ScreenPage.rendered = ->
   resizeElements()
   updateNavbar()
+
+currentId = ->
+  Router.current().params.screenId
 
 updateNavbar = ->
   left_menu = $("#private-left-menu-items")
   left_menu.append(
     '<li id="screen-page-navbar-element"><a href="#" id="edit">
     <span class="item-title">&nbsp;Edit</span>
+    </a></li>')
+  left_menu.append(
+    '<li id="screen-page-navbar-element"><a href="#" id="rename">
+    <span class="item-title">&nbsp;Rename</span>
+    </a></li>')
+  left_menu.append(
+    '<li id="screen-page-navbar-element"><a href="#" id="delete">
+    <span class="item-title">&nbsp;Delete</span>
     </a></li>')
 
 resizeElements = ->
