@@ -6,9 +6,9 @@
     RightPanel:
       to: "panel"
 
-#YIELD_TEMPLATES
-	onBeforeAction: ->
-		@next()
+##YIELD_TEMPLATES
+#  onBeforeAction: ->
+#    @next()
 
   action: ->
     if @isReady()
@@ -32,4 +32,7 @@
 
 #DATA_FUNCTION
   onAfterAction: ->
+
+  unload: ->
+    $(".navbar-brand").text("Jigurda")
 )
