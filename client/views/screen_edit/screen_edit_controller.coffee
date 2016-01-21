@@ -19,7 +19,7 @@
 
 #ACTION_FUNCTION
   isReady: ->
-    subs = [Meteor.subscribe("Screens")]
+    subs = [Meteor.subscribe("Screens"), Meteor.subscribe("Controls")]
     ready = true
     _.each subs, (sub) ->
       ready = false  unless sub.ready()

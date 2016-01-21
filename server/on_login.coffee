@@ -7,5 +7,5 @@ Accounts.onLogin (user) ->
 #      screen: "main"
 #    console.log 'inserted in screens user - ' + id
 
-  if Meteor.isClient
-    Meteor.subscribe("Screens")
+#  if Meteor.isClient
+#    Meteor.subscribe("Screens")

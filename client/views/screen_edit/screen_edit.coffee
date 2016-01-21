@@ -1,8 +1,19 @@
 Template.ScreenEdit.helpers
-  currentId: ->
-    currentId()
+  currentScreenId: ->
+    currentScreenId()
   currentScreen: ->
-    currentScreen()
+    currentScreenName()
+
+Controls.find().observeChanges
+  added: ->
+    console.log "controls added"
+    fillControlSelect()
+  changed: ->
+    console.log "controls changed"
+    fillControlSelect()
+  removed: ->
+    fillControlSelect()
+    console.log "controls removed"
 
 Template.ScreenEdit.events
   "click #add-control": (e, t) ->
@@ -11,26 +22,55 @@ Template.ScreenEdit.events
 
   "click #remove-control": (e, t) ->
     e.preventDefault()
-    console.log 'remove clicked clicked'
+    removeControl()
+    console.log 'remove clicked'
 
 Template.ScreenEdit.rendered = ->
   updateNavbar()
   resizeElements()
+  fillControlSelect()
 
 addControl = ->
-  id = Screens.update({_id: currentId()},{$set: {controls: {control: "new_control"}}})._id
+  id = Controls.insert({user: Meteor.userId(), screen: currentScreenId(), control: "control", type: "none"})
   grid_container = $("#grid-container")
-  grid_container.append('<div id="' + id + '"></div>')
+  grid_container.append('<div id="' + id + '" class="control-div"></div>')
+  $("#" + id).css
+    position: "absolute"
+    width: @cell_w
+    height: @cell_h
+    background: "blue"
 
-currentId = ->
+removeControl = ->
+  control_id = $( "#control-select option:selected" ).text()
+  Controls.remove({_id: control_id})
+
+fillControlSelect = ->
+  clearControlSelect()
+  control_select = $("#control-select")
+  controls_count = currentControls().count()
+  console.log 'controls count:' + controls_count
+#  current_controls = currentControls()
+  if controls_count
+    currentControls().forEach (control) ->
+      console.log 'fill control'
+      console.log control._id
+      control_select.append("<option>" + control._id + "</option>")
+
+clearControlSelect = ->
+  $("option").remove()
+
+currentControls = ->
+  Controls.find({screen: currentScreenId()})
+
+currentScreenId = ->
   Router.current().params.screenId
 
-currentScreen = ->
-  screen = Screens.findOne({_id: currentId()}, {})
+currentScreenName = ->
+  screen = Screens.findOne({_id: currentScreenId()}, {})
   return screen and screen.screen
 
 updateNavbar = ->
-  $(".navbar-brand").text(currentScreen())
+  $(".navbar-brand").text(currentScreenName())
 
 resizeElements = ->
   grid_width = 0.8
