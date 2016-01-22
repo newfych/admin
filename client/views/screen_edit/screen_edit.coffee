@@ -64,9 +64,13 @@ fillControlSelect = ->
 
 drawControl = (control)->
   id = control._id
+  cell_w = @cell_w
+  cell_h = @cell_h
   grid_container = $("#grid-container")
   grid_container.append('<div id="' + id + '" class="control-div"></div>')
   ctrl = $("#" + id)
+  ctrl.draggable containment: "parent"
+  ctrl.resizable containment: "parent"
   ctrl.css
     position: "absolute"
     width: control.w * @cell_w
@@ -75,14 +79,20 @@ drawControl = (control)->
   ctrl.draggable
     grid: [ @cell_w, @cell_h ]
     drag: (event, ui) ->
-      console.log 'drrug'
+      x = ui.position.left / cell_w
+      y = ui.position.top / cell_h
+      console.log 'dr left : ' + x
+      console.log 'dr top : ' + y
+      Controls.update(_id: id, {$set: {x: x, y: y}})
   ctrl.resizable
     grid: [ @cell_w, @cell_h ]
     resize: (event, ui) ->
-      console.log 'jiga'
-  ctrl.draggable containment: "parent"
-  ctrl.resizable containment: "parent"
-  console.log 'id : ' + control._id
+      w = ui.size.width / cell_w
+      h = ui.size.height / cell_h
+      console.log '/ w size' + w
+      console.log '/ h size' + h
+      Controls.update(_id: id, {$set: {w: w, h: h}})
+
 
 
 currentControls = ->
