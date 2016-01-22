@@ -8,6 +8,7 @@ Controls.find().observeChanges
   added: ->
     console.log "controls added"
     fillControlSelect()
+
   changed: ->
     console.log "controls changed"
     fillControlSelect()
@@ -31,33 +32,58 @@ Template.ScreenEdit.rendered = ->
   fillControlSelect()
 
 addControl = ->
-  id = Controls.insert({user: Meteor.userId(), screen: currentScreenId(), control: "control", type: "none"})
-  grid_container = $("#grid-container")
-  grid_container.append('<div id="' + id + '" class="control-div"></div>')
-  $("#" + id).css
-    position: "absolute"
-    width: @cell_w
-    height: @cell_h
-    background: "blue"
+  Controls.insert
+    user: Meteor.userId()
+    screen: currentScreenId()
+    control: "control"
+    type: "none"
+    x: 0
+    y: 0
+    w: 1
+    h: 1
+    color: "orange"
 
 removeControl = ->
   control_id = $( "#control-select option:selected" ).text()
   Controls.remove({_id: control_id})
 
 fillControlSelect = ->
-  clearControlSelect()
+  grid_container = $("#grid-container")
+  $("#control-select").empty()
   control_select = $("#control-select")
   controls_count = currentControls().count()
-  console.log 'controls count:' + controls_count
-#  current_controls = currentControls()
+  grid_container.empty()
+  if not controls_count
+    control_select.hide()
   if controls_count
+    control_select.show()
     currentControls().forEach (control) ->
-      console.log 'fill control'
-      console.log control._id
+      drawControl(control)
       control_select.append("<option>" + control._id + "</option>")
+      control_select.children().last().attr("selected", "selected")
 
-clearControlSelect = ->
-  $("option").remove()
+drawControl = (control)->
+  id = control._id
+  grid_container = $("#grid-container")
+  grid_container.append('<div id="' + id + '" class="control-div"></div>')
+  ctrl = $("#" + id)
+  ctrl.css
+    position: "absolute"
+    width: control.w * @cell_w
+    height: control.h * @cell_h
+    background: "orange"
+  ctrl.draggable
+    grid: [ @cell_w, @cell_h ]
+    drag: (event, ui) ->
+      console.log 'drrug'
+  ctrl.resizable
+    grid: [ @cell_w, @cell_h ]
+    resize: (event, ui) ->
+      console.log 'jiga'
+  ctrl.draggable containment: "parent"
+  ctrl.resizable containment: "parent"
+  console.log 'id : ' + control._id
+
 
 currentControls = ->
   Controls.find({screen: currentScreenId()})
@@ -66,7 +92,7 @@ currentScreenId = ->
   Router.current().params.screenId
 
 currentScreenName = ->
-  screen = Screens.findOne({_id: currentScreenId()}, {})
+  screen = Screens.findOne({_id: currentScreenId()})
   return screen and screen.screen
 
 updateNavbar = ->
@@ -150,7 +176,7 @@ resizeElements = ->
 
 #  Panel container
   panel_container_w = wrap_panel_container_w * panel_inner
-  panel_container_left = (wrap_panel_container_w - panel_container_w)/2
+#  panel_container_left = (wrap_panel_container_w - panel_container_w)/2
   panel_container.css
     position: "absolute"
     width: panel_container_w
