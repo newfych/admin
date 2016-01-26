@@ -12,6 +12,7 @@ Controls.find().observeChanges
   changed: ->
     console.log "controls changed"
     fillControlSelect()
+
   removed: ->
     fillControlSelect()
     console.log "controls removed"
@@ -25,6 +26,12 @@ Template.ScreenEdit.events
     e.preventDefault()
     removeControl()
     console.log 'remove clicked'
+
+  "change #control-select": (e) ->
+    currentTarget = e.currentTarget;
+    newValue = currentTarget.options[currentTarget.selectedIndex].value
+    console.log 'Select changed to : ' + newValue
+
 
 Template.ScreenEdit.rendered = ->
   updateNavbar()
@@ -58,14 +65,21 @@ fillControlSelect = ->
   if controls_count
     control_select.show()
     currentControls().forEach (control) ->
-      drawControl(control)
       control_select.append("<option>" + control._id + "</option>")
       control_select.children().last().attr("selected", "selected")
+      console.log 'before draw control'
+      drawControl(control)
 
 drawControl = (control)->
+  console.log 'in draw control :'
+
   id = control._id
-  cell_w = @cell_w
-  cell_h = @cell_h
+  x = control.x
+  y = control.y
+  w = control.w
+  h = control.h
+  c = control.control
+  console.log 'x = ' + x + ', y = '+y+', w = '+w+', h = '+h+', control = '+ c
   grid_container = $("#grid-container")
   grid_container.append('<div id="' + id + '" class="control-div"></div>')
   ctrl = $("#" + id)
@@ -73,27 +87,33 @@ drawControl = (control)->
   ctrl.resizable containment: "parent"
   ctrl.css
     position: "absolute"
-    width: control.w * @cell_w
-    height: control.h * @cell_h
+    left: y * @cell_w
+    top: x * @cell_h
+    width: w * @cell_w
+    height: h * @cell_h
     background: "orange"
+
+
+#  Setting up drag & resize
+
+#  Drag & Resize  Events
   ctrl.draggable
     grid: [ @cell_w, @cell_h ]
-    drag: (event, ui) ->
-      x = ui.position.left / cell_w
-      y = ui.position.top / cell_h
+    stop: (event, ui) ->
+      x = ui.position.top / cell_h
+      y = ui.position.left / cell_w
       console.log 'dr left : ' + x
       console.log 'dr top : ' + y
       Controls.update(_id: id, {$set: {x: x, y: y}})
+
   ctrl.resizable
     grid: [ @cell_w, @cell_h ]
-    resize: (event, ui) ->
+    stop: (event, ui) ->
       w = ui.size.width / cell_w
       h = ui.size.height / cell_h
       console.log '/ w size' + w
       console.log '/ h size' + h
       Controls.update(_id: id, {$set: {w: w, h: h}})
-
-
 
 currentControls = ->
   Controls.find({screen: currentScreenId()})
