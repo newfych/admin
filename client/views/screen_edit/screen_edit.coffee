@@ -7,16 +7,13 @@ Template.ScreenEdit.helpers
 # Observing collection
 Controls.find().observeChanges
   added: ->
-    console.log "controls added"
     updateAll()
 
   changed: ->
-    console.log "controls changed"
     updateAll()
 
   removed: ->
     updateAll()
-    console.log "controls removed"
 
 # Events
 Template.ScreenEdit.events
@@ -27,12 +24,55 @@ Template.ScreenEdit.events
   "click #remove-control": (e, t) ->
     e.preventDefault()
     removeControl()
-    console.log 'remove clicked'
+
+  "click #rename-control": (e, t) ->
+    e.preventDefault()
+    console.log 'rename'
+    e.preventDefault()
+    bootbox.prompt
+      title: "Enter Control name"
+      inputType: "text"
+      buttons:
+        confirm:
+          label: "Submit"
+      callback: (value) ->
+        value and renameControl(currentControlId(), value)
+
+  "click #change-type": (e, t) ->
+    e.preventDefault()
+    bootbox.dialog
+      message: "Select type"
+#      title: "Custom title"
+      buttons:
+        none:
+          label: "None"
+          className: "btn-default form-control"
+          callback: ->
+            console.log 'None'
+            changeControlType(currentControlId(), "none")
+
+        button:
+          label: "Button"
+          className: "btn-default form-control"
+          callback: ->
+            changeControlType(currentControlId(), "button")
+
+        cancel:
+          label: "Cancel"
+          className: "btn-primary form-control"
+          callback: ->
+            console.log 'Cancel'
 
   "change #control-select": (e) ->
     currentTarget = e.currentTarget;
-    newValue = currentTarget.options[currentTarget.selectedIndex].value
-    console.log 'Select changed to : ' + newValue
+    new_value = currentTarget.options[currentTarget.selectedIndex].value
+    console.log 'Select changed to : ' + new_value
+    console.log 'id ====== ' + currentControlId()
+    t = Controls.findOne({_id: currentControlId()}).type
+    console.log 'type is ' + t
+    $("#control-type").val(t)
+
+
 
 
 Template.ScreenEdit.rendered = ->
@@ -44,7 +84,7 @@ addControl = ->
   Controls.insert
     user: Meteor.userId()
     screen: currentScreenId()
-    control: "control"
+    name: ""
     type: "none"
     x: 0
     y: 0
@@ -52,10 +92,16 @@ addControl = ->
     h: 1
     color: "orange"
 
-removeControl = ->
-  control_id = $( "#control-select option:selected" ).text()
-  Controls.remove({_id: control_id})
+currentControlId = ->
+  control_name = $( "#control-select option:selected" ).text()
+  control = Controls.findOne({name: control_name})
+  if control._id
+    return control._id
 
+removeControl = ->
+  Controls.remove({_id: currentControlId()})
+
+# UPDATE ALL THINGS
 updateAll = ->
   grid_container = $("#grid-container")
   control_select = $("#control-select")
@@ -73,20 +119,94 @@ updateAll = ->
 
 # Filling grid and select
   if controls_count
+    console.log 'Controls count exists'
     showPanelElements()
+    clearControlsArrays()
     currentControls().forEach (control) ->
-      control_select.append("<option>" + control._id + "</option>")
-      control_select.children().last().attr("selected", "selected")
-      console.log 'before draw control'
+      sortControls(control)
+    currentControls().forEach (control) ->
+      namingControls(control)
+    currentControls().forEach (control) ->
+      fillSelect(control)
+    currentControls().forEach (control) ->
       drawControl(control)
+
+    setCurrentControl()
+
+
+#    control_select.children().last().attr("selected", "selected")
+
+setCurrentControl = ->
+  console.log 'set curren cntrl'
+  control_select = $("#control-select")
+  control_type = $("#control-type")
+  control_select.children().last().attr("selected", "selected")
+  control_type.val(getControlType())
+
+getControlType = ->
+  control_name = $( "#control-select option:selected" ).text()
+  console.log 'Name == '+ control_name
+  control = Controls.findOne(name: control_name)
+  if control
+    console.log 'control == ' + control.type
+    return control.type
+
+# Clear Controls Arrays
+clearControlsArrays = ->
+  @none = []
+  @buttons = []
+
+fillSelect = (control)->
+  control_select = $("#control-select")
+  control_name = control.name
+  control_select.append("<option>" + control_name + "</option>")
+
+namingControls = (control) ->
+  control_id = control._id
+  control_type = control.type
+  if control_type is "none"
+    name = "none_" + @none.indexOf(control_id)
+    renameControl(control_id, name)
+  else if control_type is "button"
+    name = "button_" + @buttons.indexOf(control_id)
+    renameControl(control_id, name)
+
+# Change control type
+changeControlType = (id, type) ->
+  Controls.update
+    _id: id
+  ,
+    $set:
+      type: type
+  updateAll()
+
+# Rename control
+renameControl = (id, name) ->
+  Controls.update
+    _id: id
+  ,
+    $set:
+      name: name
+
+# Sort controls for give them indexes
+sortControls = (control) ->
+  control_type = control.type
+  control_id = control._id
+  if control_type is "none"
+    @none.push(control_id)
+  if control_type is "button"
+    @buttons.push(control_id)
+
 
 hidePanelElements = ->
   $("#control-select").hide()
   $("#remove-control").hide()
+  $("#control-type").hide()
 
 showPanelElements = ->
   $("#control-select").show()
   $("#remove-control").show()
+  $("#control-type").show()
 
 drawControl = (control)->
   id = control._id
@@ -94,10 +214,10 @@ drawControl = (control)->
   y = control.y
   w = control.w
   h = control.h
-  c = control.control
+  name = control.name
 #  console.log 'x = ' + x + ', y = '+y+', w = '+w+', h = '+h+', control = '+ c
   grid_container = $("#grid-container")
-  grid_container.append('<div id="' + id + '" class="control-div"></div>')
+  grid_container.append('<div id="' + id + '" class="control-div">' + name + '</div>')
   ctrl = $("#" + id)
   ctrl.draggable containment: "parent"
   ctrl.resizable containment: "parent"
@@ -109,10 +229,7 @@ drawControl = (control)->
     height: h * @cell_h
     background: "orange"
 
-
-#  Setting up drag & resize
-
-#  Drag & Resize  Events
+#  Setting Drag & Resize  Events
   ctrl.draggable
     grid: [ @cell_w, @cell_h ]
     stop: (event, ui) ->
@@ -157,12 +274,12 @@ resizeElements = ->
   win_w = $(window).outerWidth(true)
   win_h = $(window).outerHeight(true)
   nav_h = $("#navbar").outerHeight()
+
 #  Computations
   edit_container_h = win_h - nav_h
   wrap_grid_container_w = win_w * grid_width
   wrap_panel_container_w = win_w * (1 - grid_width)
 
-  #  console.log "win w = " + win_w + ", win h = " + win_h + ", nav h = " + nav_h
 #  Edit container
   edit_container.css
     position: "absolute"
@@ -206,7 +323,6 @@ resizeElements = ->
     "border": "1px solid #202020"
     "border-radius": "3px"
     "box-shadow": "4px 4px 4px #202020"
-#    "background-color": "rgb(43,47,52)"
 
 #Grid to grid :)
   @cell_w = @grid_container_w / 12
@@ -222,10 +338,8 @@ resizeElements = ->
 
 #  Panel container
   panel_container_w = wrap_panel_container_w * panel_inner
-#  panel_container_left = (wrap_panel_container_w - panel_container_w)/2
   panel_container.css
     position: "absolute"
     width: panel_container_w
     top: grid_container_top
-#    left: panel_container_left
 

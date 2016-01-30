@@ -73,21 +73,6 @@ currentScreen = ->
 hideNavbar = ->
     $("#navbar").hide()
 
-#updateNavbar = ->
-#  left_menu = $("#private-left-menu-items")
-#  left_menu.append(
-#    '<li id="screen-page-navbar-element"><a href="#" id="edit">
-#    <span class="item-title">&nbsp;Edit</span>
-#    </a></li>')
-#  left_menu.append(
-#    '<li id="screen-page-navbar-element"><a href="#" id="rename">
-#    <span class="item-title">&nbsp;Rename</span>
-#    </a></li>')
-#  left_menu.append(
-#    '<li id="screen-page-navbar-element"><a href="#" id="delete">
-#    <span class="item-title">&nbsp;Delete</span>
-#    </a></li>')
-
 resizeElements = ->
   h_scale = 0.9
   w_scale = 0.8

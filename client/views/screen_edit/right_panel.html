@@ -1,7 +1,22 @@
 <template name="RightPanel">
-	<div class="list-group table-of-contents">
-		<select style="display: none" class="form-control" id="control-select"></select>
-		<a class="list-group-item" id="add-control" href="#">Add</a>
-		<a class="list-group-item" id="remove-control" href="#">rem</a>
-	</div>
+	<form class="list-group table-of-contents">
+		<div class="form-group">
+			<select class="form-control" id="control-select"></select>
+		</div>
+		<div class="form-group">
+			<button class="form-control btn-danger" id="add-control" href="#">Add</button>
+		</div>
+		<div class="form-group">
+			<button class="form-control btn-warning" id="remove-control" href="#">rem</button>
+		</div>
+		<div class="form-group">
+			<button class="form-control btn-info" id="rename-control" href="#">rename</button>
+		</div>
+		<div class="form-group">
+			<button class="form-control btn-success" id="change-type" href="#">Change type</button>
+		</div>
+		<div class="form-group">
+			<input type="text" disabled class="form-control" id="control-type">
+		</div>
+	</form>
 </template>
