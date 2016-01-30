@@ -1,4 +1,5 @@
 @ScreenPageController = RouteController.extend(
+  layoutTemplate: "ScreenPageLayout"
   template: "ScreenPage"
   yieldTemplates: {}
 

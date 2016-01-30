@@ -4,6 +4,7 @@ Template.ScreenEdit.helpers
   currentScreen: ->
     currentScreenName()
 
+# Observing collection
 Controls.find().observeChanges
   added: ->
     console.log "controls added"
@@ -17,6 +18,7 @@ Controls.find().observeChanges
     fillControlSelect()
     console.log "controls removed"
 
+# Events
 Template.ScreenEdit.events
   "click #add-control": (e, t) ->
     e.preventDefault()
