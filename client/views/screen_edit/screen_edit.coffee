@@ -8,14 +8,14 @@ Template.ScreenEdit.helpers
 Controls.find().observeChanges
   added: ->
     console.log "controls added"
-    fillControlSelect()
+    updateAll()
 
   changed: ->
     console.log "controls changed"
-    fillControlSelect()
+    updateAll()
 
   removed: ->
-    fillControlSelect()
+    updateAll()
     console.log "controls removed"
 
 # Events
@@ -38,7 +38,7 @@ Template.ScreenEdit.events
 Template.ScreenEdit.rendered = ->
   updateNavbar()
   resizeElements()
-  fillControlSelect()
+  updateAll()
 
 addControl = ->
   Controls.insert
@@ -56,32 +56,46 @@ removeControl = ->
   control_id = $( "#control-select option:selected" ).text()
   Controls.remove({_id: control_id})
 
-fillControlSelect = ->
+updateAll = ->
   grid_container = $("#grid-container")
-  $("#control-select").empty()
   control_select = $("#control-select")
-  controls_count = currentControls().count()
+
+# Empty select and grid before fill them
+  control_select.empty()
   grid_container.empty()
+
+# Check for controls entries
+  controls_count = currentControls().count()
+
+# Hide unnecessary elements if controls count is null
   if not controls_count
-    control_select.hide()
+    hidePanelElements()
+
+# Filling grid and select
   if controls_count
-    control_select.show()
+    showPanelElements()
     currentControls().forEach (control) ->
       control_select.append("<option>" + control._id + "</option>")
       control_select.children().last().attr("selected", "selected")
       console.log 'before draw control'
       drawControl(control)
 
-drawControl = (control)->
-  console.log 'in draw control :'
+hidePanelElements = ->
+  $("#control-select").hide()
+  $("#remove-control").hide()
 
+showPanelElements = ->
+  $("#control-select").show()
+  $("#remove-control").show()
+
+drawControl = (control)->
   id = control._id
   x = control.x
   y = control.y
   w = control.w
   h = control.h
   c = control.control
-  console.log 'x = ' + x + ', y = '+y+', w = '+w+', h = '+h+', control = '+ c
+#  console.log 'x = ' + x + ', y = '+y+', w = '+w+', h = '+h+', control = '+ c
   grid_container = $("#grid-container")
   grid_container.append('<div id="' + id + '" class="control-div"></div>')
   ctrl = $("#" + id)
