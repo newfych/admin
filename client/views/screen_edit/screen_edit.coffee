@@ -72,13 +72,18 @@ Template.ScreenEdit.events
     console.log 'type is ' + t
     $("#control-type").val(t)
 
-
-
-
 Template.ScreenEdit.rendered = ->
   updateNavbar()
   resizeElements()
   updateAll()
+
+#######################################################
+#  Functions
+#######################################################
+
+$("#force-select").on "change", ->
+  console.log 'Changed cekbox'
+
 
 addControl = ->
   Controls.insert
@@ -137,7 +142,6 @@ updateAll = ->
 #    control_select.children().last().attr("selected", "selected")
 
 setCurrentControl = ->
-  console.log 'set curren cntrl'
   control_select = $("#control-select")
   control_type = $("#control-type")
   control_select.children().last().attr("selected", "selected")
@@ -148,7 +152,6 @@ getControlType = ->
   console.log 'Name == '+ control_name
   control = Controls.findOne(name: control_name)
   if control
-    console.log 'control == ' + control.type
     return control.type
 
 # Clear Controls Arrays
@@ -202,11 +205,17 @@ hidePanelElements = ->
   $("#control-select").hide()
   $("#remove-control").hide()
   $("#control-type").hide()
+  $("#rename-control").hide()
+  $("#change-type").hide()
+  $("#force-checkbox-div").hide()
 
 showPanelElements = ->
   $("#control-select").show()
   $("#remove-control").show()
   $("#control-type").show()
+  $("#rename-control").show()
+  $("#change-type").show()
+  $("#force-checkbox-div").show()
 
 drawControl = (control)->
   id = control._id
@@ -229,6 +238,8 @@ drawControl = (control)->
     height: h * @cell_h
     background: "orange"
 
+  ctrl.mousedown ->
+    console.log 'Clicked id : ' + id
 #  Setting Drag & Resize  Events
   ctrl.draggable
     grid: [ @cell_w, @cell_h ]
